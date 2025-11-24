@@ -1,0 +1,46 @@
+   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Science+Gothic:wght@100..900&display=swap');
+
+   html,
+   body {
+       height: 100%;
+   }
+
+   body {
+       font-family: system-ui;
+       background: #111;
+       color: #fff;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+
+       min-height: 100vh
+   }
+
+   #display {
+       font-family: "Orbitron", sans-serif;
+       font-size: 120px;
+       color: #00eaff;
+       text-shadow: 0 0 20px #00eaff;
+       letter-spacing: 5px;
+       margin-bottom: 20px;
+       opacity: 1;
+       transform: scale(1);
+       transition: opacity 0.2s ease, transform 0.2s ease;
+   }
+
+   .fade-in {
+       opacity: 1;
+       transform: skew(1);
+   }
+
+   #start-btn {
+       padding: 10px 20px;
+       background: #007aff;
+       color: #fff;
+       font-size: 20px;
+       border: none;
+       border-radius: 5px;
+       cursor: pointer;
+       transition: tranform 0.2 ease;
+   }
