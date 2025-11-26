@@ -1,0 +1,47 @@
+#map {
+    height: 640px;
+}
+
+#centerPin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin-left: -8px;
+    margin-top: -8px;
+    background: url('https://cdn-icons-png.flaticon.com/512/684/684908.png') no-repeat center;
+    background-size: contain;
+    z-index: 9999;
+    pointer-events: none;
+    /* 不要擋地圖 */
+}
+
+#locateBtn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: white;
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#countbox {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 9999;
+    background: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    "
+
+}
