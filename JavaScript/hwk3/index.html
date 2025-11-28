@@ -1,37 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>地震地圖</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
-        integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
-
-    <style>
-        #map {
-            height: 640px;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <title>今天吃什麼？團訂小幫手</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-    <div id="map"></div>
+    <div class="app">
+        <header class="app-header">
+            <h1>今天吃什麼？</h1>
+            <p class="subtitle">抽餐點＋辦公室團訂小幫手</p>
+        </header>
 
-    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
-        integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
+        <!-- 抽餐區 -->
+        <section class="section">
+            <h2>餐點推薦</h2>
+            <div class="category-row">
+                <button class="btn category-btn" data-category="rice">飯類</button>
+                <button class="btn category-btn" data-category="noodle">麵類</button>
+                <button class="btn category-btn" data-category="bento">便當</button>
+                <button class="btn category-btn" data-category="soup">粥/鍋物</button>
+                <button class="btn category-btn" data-category="lightmeal">輕食</button>
+                <button class="btn category-btn" data-category="light">清爽</button>
+                <button class="btn category-btn" data-category="all">全部隨機</button>
+            </div>
 
-    <script>
-        var map = L.map('map').setView([25.0339145, 121.5412233], 13);
+            <div class="suggest-card" id="suggest-card">
+                <p class="suggest-placeholder">先選一個類別或按「全部隨機」吧 🍱</p>
+            </div>
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+            <div class="action-row">
+                <button class="btn primary" id="btn-random">再抽一次</button>
+            </div>
+        </section>
 
-        L.marker([25.0339145, 121.5412233]).addTo(map)
-            .bindPopup('自訂訊息<br>可以放 HTML')
-            .openPopup();
-    </script>
+        <!-- 團訂區 -->
+        <section class="section">
+            <h2>辦公室團訂</h2>
+
+            <form id="order-form" class="order-form">
+                <div class="form-group">
+                    <label for="order-name">餐點名稱</label>
+                    <input type="text" id="order-name" placeholder="例：雞腿飯 / 牛肉麵" />
+                </div>
+                <div class="form-group">
+                    <label for="order-price">價格（元）</label>
+                    <input type="number" id="order-price" placeholder="例：120" min="0" step="1" />
+                </div>
+                <button type="submit" class="btn primary full">加入團訂</button>
+            </form>
+
+            <div class="order-list-container">
+                <h3>訂單列表</h3>
+                <ul id="order-list" class="order-list">
+                    <!-- JS 動態插入 -->
+                </ul>
+                <p id="empty-text" class="empty-text">目前還沒有任何餐點 🍽</p>
+            </div>
+
+            <div class="summary">
+                <p>總份數：<span id="total-count">0</span> 份</p>
+                <p>總金額：<span id="total-amount">0</span> 元</p>
+            </div>
+
+            <div class="action-row">
+                <button class="btn ghost" id="btn-clear">清空全部</button>
+            </div>
+        </section>
+
+        <footer class="app-footer">
+            <p>呷奔</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
 </body>
 
 </html>
