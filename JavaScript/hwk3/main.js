@@ -1,246 +1,137 @@
-// ====== 假資料：餐廳 / 食物列表 ======
-const FOOD_DATA = [
-    // 飯類
-    { name: "滷肉飯＋貢丸湯", priceRange: "70-90", category: "rice", tag: "飯類" },
-    { name: "雞腿飯", priceRange: "110-130", category: "rice", tag: "飯類" },
-    { name: "泰式打拋豬飯", priceRange: "110-140", category: "rice", tag: "微辣" },
-    { name: "咖哩飯", priceRange: "110-140", category: "rice", tag: "微辣" },
+// =======================
+// 1. 初始化地圖
+// =======================
+const map = L.map("map").setView([23.7, 121], 7);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18,
+}).addTo(map);
 
-    // 麵類
-    { name: "紅燒牛肉麵", priceRange: "130-160", category: "noodle", tag: "麵類" },
-    { name: "麻醬涼麵＋味噌湯", priceRange: "75-95", category: "noodle", tag: "清爽" },
-    { name: "炸醬麵", priceRange: "80-110", category: "noodle", tag: "麵類" },
-
-    // 便當
-    { name: "排骨便當", priceRange: "95-120", category: "bento", tag: "便當" },
-    { name: "控肉便當", priceRange: "95-120", category: "bento", tag: "便當" },
-
-    // 粥/鍋物
-    { name: "皮蛋瘦肉粥", priceRange: "70-90", category: "soup", tag: "粥" },
-    { name: "小火鍋", priceRange: "100-150", category: "soup", tag: "鍋" },
+let markersLayer = L.layerGroup().addTo(map);
 
 
-    // 清爽
-    { name: "和風雞肉沙拉", priceRange: "110-150", category: "light", tag: "清爽" },
-    { name: "鮪魚生菜沙拉", priceRange: "90-130", category: "light", tag: "清爽" },
-    { name: "夏威夷生魚飯", priceRange: "120-200", category: "light", tag: "清爽" },
-
-    // 輕食類
-    { name: "美式起司漢堡", priceRange: "120-160", category: "lightmeal", tag: "漢堡" },
-    { name: "培根牛肉堡", priceRange: "150-180", category: "lightmeal", tag: "漢堡" },
-    { name: "鮪魚潛艇堡", priceRange: "90-120", category: "lightmeal", tag: "潛艇堡" },
-    { name: "雞肉凱薩潛艇堡", priceRange: "110-140", category: "lightmeal", tag: "潛艇堡" },
-    { name: "墨西哥雞肉捲", priceRange: "90-130", category: "lightmeal", tag: "肉捲" },
-    { name: "脆皮椒鹽雞腿漢堡", priceRange: "140-170", category: "lightmeal", tag: "漢堡" }
-];
-
-// ====== 元素取得 ======
-const suggestCard = document.getElementById("suggest-card");
-const categoryButtons = document.querySelectorAll(".category-btn");
-const btnRandom = document.getElementById("btn-random");
-
-const orderForm = document.getElementById("order-form");
-const inputName = document.getElementById("order-name");
-const inputPrice = document.getElementById("order-price");
-const orderListEl = document.getElementById("order-list");
-const emptyTextEl = document.getElementById("empty-text");
-const totalCountEl = document.getElementById("total-count");
-const totalAmountEl = document.getElementById("total-amount");
-const btnClear = document.getElementById("btn-clear");
-
-// ====== 狀態 ======
-let currentCategory = "all";
-let orders = [];
-
-// localStorage key
-const STORAGE_KEY = "group_order_data_v1";
-
-// ====== 工具函式 ======
-function randomPick(array) {
-    if (!array.length) return null;
-    const index = Math.floor(Math.random() * array.length);
-    return array[index];
-}
-
-// 讀取 localStorage
-function loadOrdersFromStorage() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return;
-    try {
-        orders = JSON.parse(saved);
-    } catch (e) {
-        console.error("解析 localStorage 失敗", e);
-        orders = [];
-    }
-}
-
-// 儲存到 localStorage
-function saveOrdersToStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-}
-
-// ====== 抽餐邏輯 ======
-function getFilteredFood() {
-    if (currentCategory === "all") return FOOD_DATA;
-    return FOOD_DATA.filter((item) => item.category === currentCategory);
-}
-
-function renderSuggestion(food) {
-    if (!food) {
-        suggestCard.innerHTML = `<p class="suggest-placeholder">這個分類目前沒有餐點，可以先試試「全部隨機」 🍱</p>`;
-        return;
-    }
-
-    suggestCard.innerHTML = `
-    <div class="suggest-info">
-      <p class="suggest-name">${food.name}</p>
-      <p class="suggest-meta">大約價位：${food.priceRange} 元</p>
-      <span class="suggest-tag">${food.tag}</span>
-    </div>
-    <div class="suggest-emoji">🍚</div>
-  `;
-}
-
-function handleRandomClick() {
-    const list = getFilteredFood();
-    if (!list.length) {
-        renderSuggestion(null);
-        return;
-    }
-
-    // 加上 flip class → 啟動動畫
-    suggestCard.classList.add("flip");
-
-    // 在動畫 0.25 秒（翻到一半）時換內容
-    setTimeout(() => {
-        const finalFood = randomPick(list);
-        renderSuggestion(finalFood);
-    }, 250);
-
-    // 動畫結束後移除 class，才能下一次再觸發
-    suggestCard.addEventListener("animationend", () => {
-        suggestCard.classList.remove("flip");
-    }, { once: true });
-}
-
-function handleCategoryClick(e) {
-    const btn = e.target.closest(".category-btn");
-    if (!btn) return;
-    currentCategory = btn.dataset.category;
-
-    // active 樣式
-    categoryButtons.forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
-
-    // 一選類別就抽一次
-    const list = getFilteredFood();
-    const temp = randomPick(list);
-    renderSuggestion(temp);
-
-    suggestCard.classList.remove("animate");
-    void suggestCard.offsetWidth;
-    suggestCard.classList.add("animate");
+// =======================
+// 2. icon
+// =======================
+function createQuakeIcon(mag) {
+    return L.divIcon({
+        className: "",
+        html: `<div style="
+            width:${10 + mag * 3}px;
+            height:${10 + mag * 3}px;
+            background:red;
+            border-radius:50%;
+            border:2px solid white;
+        "></div>`,
+        iconSize: [20, 20],
+    });
 }
 
 
+// =======================
+// 3. 抓資料
+// =======================
+let allQuakes = [];
+const perPage = 30;
+let currentPage = 1;
 
-// ====== 團訂邏輯 ======
-function renderOrders() {
-    orderListEl.innerHTML = "";
+function loadEarthquakes() {
+    fetch("https://opendata.cwa.gov.tw/api/v1/rest/datastore/E-A0015-001?Authorization=CWA-E3E2F173-2244-4E1B-A685-3CB3254320A2")
+        .then(res => res.json())
+        .then(data => {
+            console.log("地震 API 取得資料如下：", data);
 
-    if (!orders.length) {
-        emptyTextEl.style.display = "block";
-    } else {
-        emptyTextEl.style.display = "none";
-    }
+            const quakes = data.records.Earthquake;
+            allQuakes = quakes;  // 你的資料不用過濾，直接用
 
-    let totalAmount = 0;
+            renderPage(1);
+        })
+        .catch(err => console.error("地震資料錯誤", err));
+}
 
-    orders.forEach((order, index) => {
-        totalAmount += order.price;
 
-        const li = document.createElement("li");
-        li.className = "order-item";
+// =======================
+// 4. 渲染分頁
+// =======================
+function renderPage(page) {
 
-        li.innerHTML = `
-      <div class="order-item-main">
-        <span class="order-item-name">${order.name}</span>
-        <span class="order-item-price">${order.price} 元</span>
-      </div>
-      <button class="btn order-item-btn" data-index="${index}">刪除</button>
-    `;
+    currentPage = page;
 
-        orderListEl.appendChild(li);
+    const start = (page - 1) * perPage;
+    const end = page * perPage;
+
+    const pageData = allQuakes.slice(start, end);
+
+    const tbody = document.getElementById("quake-list");
+    tbody.innerHTML = "";
+
+    pageData.forEach(q => {
+
+        const info = q.EarthquakeInfo;
+
+        const time = info.OriginTime;
+        const loc = info.Epicenter.Location;
+        const lat = info.Epicenter.EpicenterLatitude;
+        const lng = info.Epicenter.EpicenterLongitude;
+        const depth = info.FocalDepth;
+        const mag = info.EarthquakeMagnitude.MagnitudeValue;
+
+        const tr = document.createElement("tr");
+        tr.className = "quake-row";
+
+        tr.innerHTML = `
+            <td>${time}</td>
+            <td>${loc}</td>
+        `;
+
+        tr.addEventListener("click", () => {
+            focusOnQuake({ lat, lng, depth, loc, time, mag });
+        });
+
+        tbody.appendChild(tr);
     });
 
-    totalCountEl.textContent = orders.length;
-    totalAmountEl.textContent = totalAmount;
+    renderPagination();
 }
 
-function handleAddOrder(e) {
-    e.preventDefault();
 
-    const name = inputName.value.trim();
-    const priceValue = inputPrice.value.trim();
+// =======================
+// 5. 分頁按鈕
+// =======================
+function renderPagination() {
+    const totalPages = Math.ceil(allQuakes.length / perPage);
 
-    if (!name || !priceValue) {
-        alert("請填寫餐點名稱與價格");
-        return;
-    }
-
-    const price = parseInt(priceValue, 10);
-    if (isNaN(price) || price < 0) {
-        alert("價格請輸入正確的數字");
-        return;
-    }
-
-    orders.push({ name, price });
-    saveOrdersToStorage();
-    renderOrders();
-
-    // 清空輸入框
-    inputName.value = "";
-    inputPrice.value = "";
-    inputName.focus();
+    document.getElementById("pagination").innerHTML = `
+        <span class="page-btn" onclick="renderPage(${Math.max(1, currentPage - 1)})">上一頁</span>
+        第 ${currentPage} / ${totalPages} 頁
+        <span class="page-btn" onclick="renderPage(${Math.min(totalPages, currentPage + 1)})">下一頁</span>
+    `;
 }
 
-function handleOrderListClick(e) {
-    const btn = e.target.closest(".order-item-btn");
-    if (!btn) return;
 
-    const index = parseInt(btn.dataset.index, 10);
-    if (isNaN(index)) return;
+// =======================
+// 6. 地圖聚焦
+// =======================
+function focusOnQuake(q) {
 
-    orders.splice(index, 1);
-    saveOrdersToStorage();
-    renderOrders();
+    markersLayer.clearLayers();
+
+    const { lat, lng, depth, loc, time, mag } = q;
+
+    L.marker([lat, lng], { icon: createQuakeIcon(mag) })
+        .addTo(markersLayer)
+        .bindPopup(`
+            <b>${loc}</b><br>
+            時間：${time}<br>
+            規模：${mag}<br>
+            深度：${depth} km
+        `)
+        .openPopup();
+
+    map.setView([lat, lng], 8);
 }
 
-function handleClear() {
-    if (!orders.length) return;
-    const sure = confirm("確定要清空全部團訂嗎？");
-    if (!sure) return;
 
-    orders = [];
-    saveOrdersToStorage();
-    renderOrders();
-}
-
-// ====== 初始化 ======
-function init() {
-    // 綁定事件
-    categoryButtons.forEach((btn) =>
-        btn.addEventListener("click", handleCategoryClick)
-    );
-    btnRandom.addEventListener("click", handleRandomClick);
-
-    orderForm.addEventListener("submit", handleAddOrder);
-    orderListEl.addEventListener("click", handleOrderListClick);
-    btnClear.addEventListener("click", handleClear);
-
-    // 載入 localStorage
-    loadOrdersFromStorage();
-    renderOrders();
-}
-
-init();
+// =======================
+// 7. 啟動
+// =======================
+loadEarthquakes();

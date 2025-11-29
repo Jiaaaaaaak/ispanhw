@@ -1,81 +1,46 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8" />
-    <title>今天吃什麼？團訂小幫手</title>
+    <title>臺灣即時地震地圖</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-    <div class="app">
-        <header class="app-header">
-            <h1>今天吃什麼？</h1>
-            <p class="subtitle">抽餐點＋辦公室團訂小幫手</p>
-        </header>
 
-        <!-- 抽餐區 -->
-        <section class="section">
-            <h2>餐點推薦</h2>
-            <div class="category-row">
-                <button class="btn category-btn" data-category="rice">飯類</button>
-                <button class="btn category-btn" data-category="noodle">麵類</button>
-                <button class="btn category-btn" data-category="bento">便當</button>
-                <button class="btn category-btn" data-category="soup">粥/鍋物</button>
-                <button class="btn category-btn" data-category="lightmeal">輕食</button>
-                <button class="btn category-btn" data-category="light">清爽</button>
-                <button class="btn category-btn" data-category="all">全部隨機</button>
-            </div>
+    <h2>臺灣即時地震地圖</h2>
 
-            <div class="suggest-card" id="suggest-card">
-                <p class="suggest-placeholder">先選一個類別或按「全部隨機」吧 🍱</p>
-            </div>
-
-            <div class="action-row">
-                <button class="btn primary" id="btn-random">再抽一次</button>
-            </div>
-        </section>
-
-        <!-- 團訂區 -->
-        <section class="section">
-            <h2>辦公室團訂</h2>
-
-            <form id="order-form" class="order-form">
-                <div class="form-group">
-                    <label for="order-name">餐點名稱</label>
-                    <input type="text" id="order-name" placeholder="例：雞腿飯 / 牛肉麵" />
-                </div>
-                <div class="form-group">
-                    <label for="order-price">價格（元）</label>
-                    <input type="number" id="order-price" placeholder="例：120" min="0" step="1" />
-                </div>
-                <button type="submit" class="btn primary full">加入團訂</button>
-            </form>
-
-            <div class="order-list-container">
-                <h3>訂單列表</h3>
-                <ul id="order-list" class="order-list">
-                    <!-- JS 動態插入 -->
-                </ul>
-                <p id="empty-text" class="empty-text">目前還沒有任何餐點 🍽</p>
-            </div>
-
-            <div class="summary">
-                <p>總份數：<span id="total-count">0</span> 份</p>
-                <p>總金額：<span id="total-amount">0</span> 元</p>
-            </div>
-
-            <div class="action-row">
-                <button class="btn ghost" id="btn-clear">清空全部</button>
-            </div>
-        </section>
-
-        <footer class="app-footer">
-            <p>呷奔</p>
-        </footer>
+    <div class="container">
+        <div class="left">
+            <div id="map"></div>
+        </div>
+        <div class="right">
+            <h3>近半年地震紀錄</h3>
+            <table id="quake-table">
+                <thead>
+                    <tr>
+                        <th>時間</th>
+                        <th>位置</th>
+                    </tr>
+                </thead>
+                <tbody id="quake-list"></tbody>
+            </table>
+            <div id="pagination"></div>
+        </div>
     </div>
+
 
     <script src="main.js"></script>
 </body>
 
 </html>
+
+<table>
+
+    <tbody id="quake-list"></tbody>
+</table>
