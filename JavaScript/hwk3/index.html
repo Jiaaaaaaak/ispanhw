@@ -13,7 +13,9 @@
 
 <body>
 
-    <h2>臺灣即時地震地圖</h2>
+    <div class="header-title">
+        <h1>臺灣即時地震地圖</h1>
+    </div>
 
     <div class="container">
         <div class="left">
@@ -21,26 +23,26 @@
         </div>
         <div class="right">
             <h3>近半年地震紀錄</h3>
-            <table id="quake-table">
-                <thead>
-                    <tr>
-                        <th>時間</th>
-                        <th>位置</th>
-                    </tr>
-                </thead>
-                <tbody id="quake-list"></tbody>
-            </table>
+            <div class="table-container">
+                <table id="quake-table">
+                    <thead>
+                        <tr>
+                            <th>時間</th>
+                            <th>位置</th>
+                            <th>規模</th>
+                        </tr>
+                    </thead>
+                    <tbody id="quake-list"></tbody>
+                </table>
+            </div>
             <div id="pagination"></div>
         </div>
     </div>
-
+    <p>參考youbike作業，利用Leaflet函式; 抓取氣象署提供API，臨摹官方「最近地震」網頁 </p>
+    <p>DOM 操作 、AJAX/API 請求<br>事件處理 ：使用 tr.addEventListener 監聽表格列的點擊，觸發地圖聚焦。<br> 函式庫整合：透過 JavaScript 程式碼控制 Leaflet 函式庫
+    </p>
 
     <script src="main.js"></script>
 </body>
 
 </html>
-
-<table>
-
-    <tbody id="quake-list"></tbody>
-</table>

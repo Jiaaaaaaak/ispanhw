@@ -1,72 +1,296 @@
 body {
-    font-family: sans-serif;
-    margin: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+.header-title {
+    background-color: #005eb8;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header-title h1 {
+    margin: 0;
+    font-size: 2em;
 }
 
 .container {
-    max-width: 1200px;
-    width: 100%;
-    margin: 0 auto;
-    /* 讓整個 .container 置中 */
+    max-width: 1300px;
+    /* 稍微增加最大寬度 */
+    margin: 20px auto;
     display: flex;
-    justify-content: center;
-    /* 讓內部 flex items 在 container 中置中 */
-    gap: 20px;
+    gap: 30px;
+    /* 增加間距 */
     align-items: flex-start;
+    padding: 0 20px;
+    /* 增加左右內邊距 */
 }
 
-/* 左側地圖的寬度固定，符合你喜歡的尺寸 */
 .left {
-    width: 450px;
-    /* 這樣你的地圖就會保持 450px 寬 */
+    flex: 2;
+    /* 讓地圖佔更多空間 */
+    min-width: 500px;
+    /* 確保地圖有足夠寬度 */
+    max-width: 65%;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    /* 確保地圖的圓角正常顯示 */
 }
 
-/* 地圖的高度要寫死，不要讓 flex 伸縮 */
 #map {
-    height: 600px;
+    height: 650px;
+    /* 增加地圖高度 */
     width: 100%;
-    /* 填滿 left 的 450px */
-    flex-shrink: 0;
-    /* ⭐避免被右邊內容擠壓縮掉 */
+    border-radius: 8px;
 }
 
-/* 右側列表自動填滿剩餘空間 */
 .right {
     flex: 1;
-    max-height: 600px;
-    /* 和 map 的高度一致 */
-    overflow-y: auto;
+    min-width: 300px;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
+.right h3 {
+    margin-top: 0;
+    color: #005eb8;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.table-container {
+    flex: 1;
+    /* 讓表格容器填滿剩餘空間 */
+    overflow-y: auto;
+    /* 讓表格內容可以滾動 */
+    max-height: 520px;
+    /* 配合地圖高度，預留標題和分頁空間 */
+    margin-bottom: 15px;
+}
 
 /* 表格樣式 */
 #quake-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 15px;
-    font-size: 14px;
+    font-size: 0.9em;
+    min-width: 350px;
+    /* 確保表格在縮小時不至於太擠 */
+}
+
+#quake-table th,
+#quake-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 #quake-table th {
-    background: #005eb8;
+    background: #007bff;
+    /* 更改標題欄背景色 */
     color: white;
-    padding: 8px
+    position: sticky;
+    /* 表頭固定 */
+    top: 0;
+    z-index: 1;
 }
 
-#quake-table td {
-    padding: 6px 10px;
-    border-bottom: 1px solid #ddd;
+#quake-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 .quake-row:hover {
-    background-color: #f0f8ff;
+    background-color: #e6f7ff;
+    /* 更柔和的 hover 顏色 */
     cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* 規模標籤樣式 */
+.magnitude-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: white;
+    min-width: 55px;
+    /* 確保M的寬度一致 */
+    text-align: center;
+}
+
+.mag-0,
+.mag-1,
+.mag-2 {
+    background-color: #6c757d;
+}
+
+/* 灰色 */
+.mag-3 {
+    background-color: #28a745;
+}
+
+/* 綠色 */
+.mag-4 {
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* 黃色 */
+.mag-5 {
+    background-color: #fd7e14;
+}
+
+/* 橘色 */
+.mag-6 {
+    background-color: #dc3545;
+}
+
+/* 紅色 */
+.mag-7,
+.mag-8,
+.mag-9 {
+    background-color: #6f42c1;
+}
+
+/* 紫色 */
+
+
+p {
+    margin: 0 50px
+}
+
+/* 分頁樣式 */
+#pagination {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
 }
 
 .page-btn {
-    padding: 5px 10px;
-    border: 1px solid #888;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
     cursor: pointer;
-    margin: 3px;
-    display: inline-block;
+    margin: 0 5px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.page-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#pagination span {
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+
+/* =======================
+   震央擴散動畫樣式
+   ======================= */
+.quake-icon-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.pulse-dot {
+    position: absolute;
+    background-color: rgba(255, 0, 0, 0.8);
+    /* 紅色中心點 */
+    border-radius: 50%;
+    border: 2px solid white;
+    z-index: 10;
+    /* 確保中心點在擴散圈上方 */
+}
+
+.pulse-ring {
+    position: absolute;
+    border: 2px solid rgba(255, 0, 0, 0.7);
+    /* 紅色擴散環 */
+    border-radius: 50%;
+    animation: pulse 1.5s ease-out infinite;
+    /* 擴散動畫 */
+    opacity: 0;
+    /* 初始透明 */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.1);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+
+/* 響應式設計 */
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        margin: 15px auto;
+    }
+
+    .left,
+    .right {
+        width: 95%;
+        min-width: unset;
+        max-width: unset;
+    }
+
+    #map {
+        height: 450px;
+        /* 小螢幕下地圖高度 */
+    }
+
+    .table-container {
+        max-height: 400px;
+        /* 小螢幕下表格高度 */
+    }
+}
+
+@media (max-width: 576px) {
+    .header-title h1 {
+        font-size: 1.5em;
+    }
+
+    #quake-table th,
+    #quake-table td {
+        padding: 8px 10px;
+    }
+
+    #pagination {
+        font-size: 0.9em;
+    }
+
+    .page-btn {
+        padding: 6px 10px;
+    }
 }
