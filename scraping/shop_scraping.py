@@ -59,7 +59,6 @@ def search_costco(keyword, max_items=5):
             "images":image_url
         })
 
-        break
 
     if not filtered:
         return "查無此商品"
@@ -101,15 +100,14 @@ def main():
 
     if data == "查無此商品":
         print("查無此商品")
-    else:
-        print(f"5l3l24{len(data)}筆商品:\n")
-        for item in data:
-            print(item)
+        return 
+ 
+    print(f"找到{len(data)}筆商品：\n")
+    for item in data:
+        print(item)
 
     
     save_json(keyword, data)
-
-
 
 
 if __name__ == "__main__":
